@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <title>My Quote List</title>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        
+    </head>
+    <body>
+        <div class="container">
+            <h1>Welcome, {{request.session.login_status.name}}</h1>
+            <p style="text-align: right" ><a href="/logout">Logout</a></p>
+            <h2>Quototable Quotes</h2><br>
+            <table class="table table-striped">
+                    <thead>
+                        <tr>
+                            <th>quotes</th>
+                            <th>Added By</th>
+                        </tr>
+                        {% for this_quote in belt_exam %}
+                            {%for sub in quote.quoted_by.all %}
+                                <tr>
+                                    {% if sub.id == request.session.login_status.id %}
+                                        <td><a href="/wish_quotes/{{quote.id}}">{{quote.quotename}}</a></td>
+                                        <td>{{quote.added_by.name}}</td>
+                                        <!-- {% if quote.added_by_id == request.session.login_status.id %}
+
+                                            <td>
+                                                <form action="/delete_quote" method="post">
+                                                    {% csrf_token %}
+                                                    <input type="hidden" name="quote_id" value="{{quote.id}}">
+                                                    <input type="submit" value="Delete">
+                                                </form>
+                                            </td>
+                                        {% else %}
+                                        <td>
+                                            <form action="/remove_quotelist" method="post">
+                                                {% csrf_token %}
+                                                <input type="hidden" name="quote_id" value="{{quote.id}}">
+                                                <input type="submit" value="Remove from my Quotes">
+                                            </form>
+                                        </td> -->
+                                        {% endif %}
+                                    {% endif %}
+                                </tr>
+                            {% endfor %}
+                        {% endfor %}
+                    </thead>
+            </table>
+            <h2>Your Favorites</h2><br>
+            <table class="table table-striped">
+                    <thead>
+                        <tr>
+                            <th>quote</th>
+                            <th>Added By</th>
+                            <th>Action</th>
+                        </tr>
+                        {% for quote in belt_exam %}
+                            <tr>
+                                <td><a href="/quote_quotes/{{quote.id}}">{{quote.quotename}}</a></td>
+                                <td>{{quote.added_by.name}}</td>
+
+                                <td>
+                                    <form action="/add_to_quotelist" method="post">
+                                        {% csrf_token %}
+                                        <input type="hidden" name="quote_id" value="{{quote.id}}">
+                                        <input type="submit" value="Add to my quotelist">
+                                        <a href="/belt_exam">Remove from Quotes</a>
+                                    </form>
+                                    </td>
+                            </tr>
+                        {% endfor %}
+                    </thead>
+            </table>
+            <h2>Contribute a Quote</h2><br>
+            <form action="add" method="post">
+                    {% csrf_token %}
+                    Quoted by: 
+                    <input type="text" name="quote_name"><br>
+                    Message: 
+                    <input type="text" name="quote_name"><br>
+                    <br><input type="submit" value="Add">
+            </form>
+
+        </div>
+    </body>
+</html>
